@@ -46,10 +46,19 @@ class RestaurantScreen extends React.Component {
     this.unsubscribeFromFirestore();
   }
 
+  handleRestaurantSelected = (nameRes) => {
+    const { navigation } = this.props;
+    const menuId = navigation.getParam('menuId');
+    const name = navigation.getParam('name');
+    const meat = navigation.getParam('meat');
+
+    navigation.navigate('Order', { menuId: menuId, name: name, meat: meat, nameRes: nameRes})
+  }
+
+
   render() {
     const { restaurantList } = this.state;
     const { navigation } = this.props;
-    const menuId = navigation.getParam('menuId');
     const meat = navigation.getParam('meat');
     const pic = navigation.getParam('pic');
     const name = navigation.getParam('name');
@@ -74,7 +83,8 @@ class RestaurantScreen extends React.Component {
             </Body>
           </CardItem>
         </Card>
-        <RestaurantList restaurantList={ restaurantList } />
+        <RestaurantList restaurantList={ restaurantList } 
+         onRestaurantSelected={ this.handleRestaurantSelected } />
       </Container>
     )
   }

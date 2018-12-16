@@ -25,11 +25,10 @@ export default class HistoryScreen extends React.Component {
     var collection_key = "";
     this.subscription = collection.onSnapshot((snapshot) => {
       collection_key = snapshot.docs[0].id
-      console.log(collection_key)
+      // console.log(collection_key)
       const collection2 = firestore.collection('user').doc(collection_key).collection('history_order').orderBy("status", "desc");
       this.subscription2 = collection2.onSnapshot((snapshot2) => {
-        console.log("tst")
-        console.log(snapshot2.docs)
+        // console.log(snapshot2.docs)
         let history_order = snapshot2.docs.map((doc) => ({
           _id: doc.id,
           ...doc.data(),
@@ -41,8 +40,10 @@ export default class HistoryScreen extends React.Component {
 
 
   unsubscribeFromFirestore() {
-    this.subscription();
-    this.subscription2();
+    if(this.subscription)
+      this.subscription();
+    if(this.subscription2)
+      this.subscription2();
   }
 
   componentDidMount() {
@@ -56,7 +57,7 @@ export default class HistoryScreen extends React.Component {
 
   historySelect = (status, menu, restaurant, timeC, _id) => {
     const { navigation } = this.props;
-    console.log(status, menu, restaurant, timeC, _id)
+    // console.log(status, menu, restaurant, timeC, _id)
     if(status == 'finish')
       navigation.navigate('QR', {status, menu, restaurant, timeC, _id});
   }

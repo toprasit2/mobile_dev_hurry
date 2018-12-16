@@ -33,7 +33,7 @@ export default class Login extends React.Component {
             placeholder="Password :"
             onChangeText={(password) => this.setState({password})}
             />
-            <Button onPress={this.props.Login(this.state.email, this.state.password)}><Text>Login</Text></Button>
+            <Button onPress={()=>this.props.Login(this.state.email, this.state.password)}><Text>Login</Text></Button>
         </View>
     );
   }

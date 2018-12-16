@@ -148,8 +148,6 @@ export default class HistoryEntry extends React.Component {
       dateTime,
       id
     } = history_order;
-    if(dateTime != undefined)
-      console.log(history_order)
     return (
       <TouchableHighlight
         onPress={this.handlePressed}

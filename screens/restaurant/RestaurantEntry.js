@@ -3,6 +3,12 @@ import { Card, CardItem, Body } from 'native-base';
 import { View, Image, Text } from 'react-native';
 
 class RestaurantEntry extends React.Component {
+  
+  handlePress = (nameRes) => {
+    const { onPressed } = this.props;
+    if(typeof onPressed === 'function')
+      onPressed(nameRes);
+  }
 
   render() {
     const { restaurant } = this.props;
@@ -16,7 +22,7 @@ class RestaurantEntry extends React.Component {
 
     return (
         <Card>
-          <CardItem>
+          <CardItem button onPress={() => {this.handlePress(name)}}>
             <Body>
               <View style={{flexDirection: 'row'}}>
                 <View>

@@ -40,13 +40,18 @@ export default class QRScreen extends React.Component {
       const collection2 = firestore.collection('user').doc(collection_key).collection('history_order').doc(id);
       this.subscription2 = collection2.onSnapshot((snapshot2) => {
         console.log(snapshot2._data)
-        if(snapshot2._data.restaurant == e.data)
+        if(snapshot2._data.restaurant == e.data){
           firestore.collection('user').doc(collection_key).collection('history_order').doc(id).set({
            ...snapshot2._data,
             status:'.done'
           }).then(()=>{
             this.props.navigation.pop()
           })
+        }
+        else{
+          alert('กรุณาแสกน QR code ของร้านที่ท่านสั่ง')
+          this.props.navigation.pop()
+        }
       });
     });
     // Linking

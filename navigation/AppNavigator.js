@@ -2,7 +2,7 @@ import React from 'react';
 import { createStackNavigator, createBottomTabNavigator, createAppContainer } from 'react-navigation';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
-import HomeScreen from '../screens/HomeScreen';
+import HomeScreen from '../screens/HomeScreen/index';
 
 import OrderScreen from '../screens/OrderScreen';
 import ListScreen from '../screens/list_order/ListScreen';

@@ -10,6 +10,55 @@ import {
 import { Button } from 'native-base';
 import moment from 'moment';
 
+class AddOption extends React.Component {
+  constructor(props){
+    super(props);
+  }
+  getOption = (op) => {
+    if(op != null)
+      return { fontSize: 16, textAlign: 'center' };
+  }
+
+  render() {
+    return(
+      <View>
+      <Text style = {this.getOption(this.props.op)}>
+        { this.props.op }
+      </Text>
+    </View>
+    );  
+  }
+}
+
+class PlusSpecial extends React.Component {
+  constructor(props){
+    super(props);
+      this.state = {
+        textSpecial: ''
+      }
+  }
+  getOption = (spe) => {
+    if(spe == true){
+      this.state.textSpecial = 'พิเศษ';
+      return { fontSize: 16, textAlign: 'center' };
+    }
+    else {
+      this.state.textSpecial = 'ปกติ';
+      return { fontSize: 16, textAlign: 'center' };
+    }
+  }
+
+  render() {
+    return(
+      <View>
+      <Text style = {this.getOption(this.props.spe)}>
+        { this.state.textSpecial }
+      </Text>
+    </View>
+    );  
+  }
+}
+
 class RestText extends React.Component {
   render(){
     return(
@@ -33,7 +82,7 @@ class ReserveTime extends React.Component {
     return(
       <View>
         <Text style = {{fontWeight: 'bold', color: 'red', fontSize: 20}}>
-            {this.state.hours} : {this.state.minutes} {'\n'}
+            {this.state.hours} : {this.state.minutes}
           </Text>
       </View>
     )
@@ -44,7 +93,9 @@ class OrderList extends React.Component{
   render(){
     return(
       <View>
-        <Text style = {{fontSize: 16, textAlign: 'left', lineHeight: 15}}> {this.props.menuname}{'\n'} </Text>
+        <Text style = {{fontSize: 16, textAlign: 'left'}}>
+          {this.props.menuname}{'\n'}
+        </Text>
       </View>
     );
   }
@@ -93,17 +144,27 @@ export default class ListEntry extends React.Component {
         style={styles.touchable}
       >
         <View style = {styles.box}>
-            <View style = {{height: 130, backgroundColor: 'lightgrey'}}>
+            <View style = {{flex: 1, backgroundColor: 'lightgrey'}}>
               <View style = {styles.resttext}>
                 <RestText rname = { restaurant } />
                 <ReserveTime />
               </View>
-              <View style = {styles.orderlist}>
-                <OrderList menuname = { menu } />
+              <View style = {styles.detailZone}>
+                <View style = {styles.orderlist}>
+                  <OrderList menuname = { menu } />
+                </View>
+                <View style = {styles.optionDetail}>
+                  <View style = {styles.optionBox}>
+                    <AddOption op = { optionEgg } />
+                  </View>
+                  <View style = {styles.speBox}>
+                    <PlusSpecial spe = { optionFood } />
+                  </View> 
+                </View>
               </View>
               <View style = {styles.price}>
                 <Text style = {{fontSize: 20}}> ราคา{'\t'} </Text>             
-                <TotalPrice price = { price } />
+                  <TotalPrice price = { price } />
                 <Text style = {{fontSize: 20}}> {'\t'}บาท </Text>
               </View>
             </View>           
@@ -124,7 +185,6 @@ const styles = StyleSheet.create({
     fontSize: 16
   },
   restaurant: {
-    paddingBottom: 5,
     fontSize: 20,
     fontWeight: 'normal'
   },
@@ -138,20 +198,45 @@ const styles = StyleSheet.create({
   resttext: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingHorizontal: 10,
-    paddingTop: 10
+    paddingHorizontal: 4,
+    paddingTop: 4
   },
   orderlist: {
     flexDirection: 'column',
-    paddingHorizontal: 30,
+    paddingHorizontal: 25,
     justifyContent: 'space-evenly'
   },
   price: {
     flexDirection: 'row',
     justifyContent: 'flex-end',
     textAlignVertical: 'bottom',
-    paddingBottom: 15,
-    paddingHorizontal: 10
+    paddingBottom: 4,
+    paddingHorizontal: 4
+  },
+  optionDetail: {
+    flexDirection: 'column',
+    justifyContent: 'space-evenly',
+    alignItems: 'flex-end',
+    paddingHorizontal: 25
+  },
+  detailZone: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  optionBox: {
+    height: 32,
+    width: 64,
+    backgroundColor: 'white',
+    borderColor: 'black',
+    borderWidth: 1,
+    paddingVertical: 3
+  },
+  speBox: {
+    height: 32,
+    width: 64,
+    backgroundColor: 'white',
+    borderColor: 'black',
+    borderWidth: 1
   }
 });
 

@@ -30,15 +30,17 @@ export default class ListScreen extends React.Component {
           _id: doc.id,
           ...doc.data(),
         }));
-        let sum = 0;
+        
         if(list_order){
+          let sum = 0;
           list_order.map((l) => {
             sum+=l.price
-            console.log(l.price)
+            // console.log(l.price)
             this.setState({sum})
           })
         }
         else{
+          let sum = 0;
           this.setState({sum})
         }
         this.setState({ list_order });
@@ -60,21 +62,24 @@ export default class ListScreen extends React.Component {
   }
 
   saveOrder = () => {
+    const { navigation } = this.props
     const { list_order } = this.state;
     const collection = firestore.collection('user').where("email", "==", "admin@mail.com");
     var collection_key = "";
     this.subscription = collection.onSnapshot((snapshot) => {
       collection_key = snapshot.docs[0].id
       list_order.map((l)=>{
-        firestore.collection('user').doc(collection_key).collection('history_order').add({
-          _id: l.id,
+        firestore.collection('user').doc(collection_key).collection('history_order').doc(l._id).set({
           ...l,
           dateTime: firebase.firestore.FieldValue.serverTimestamp(),
           status:'cooking'
         })
         firestore.collection('user').doc(collection_key).collection('list_order').doc(l._id).delete()
-        console.log(l)
+        var sum = 0;
+        this.setState({sum})
       })
+      const { navigation } = this.props
+      navigation.navigate('History')
       
       
     });
@@ -86,14 +91,13 @@ export default class ListScreen extends React.Component {
     const { sum } = this.state;
 
     return (
-      <View>
+      <View style={{flex:1, flexDirection: 'column'}}>
         <ListOrder
           list_order={ list_order }
           onListSelect={this.listSelect}
         />
-        <View>
-        <View style = {{height:130}}> 
-            <Button block style={{backgroundColor:'white', height:130}} onPress={()=>{this.props.navigation.navigate('Menu')}}>
+        <View> 
+            <Button block style={{backgroundColor:'white'}} onPress={()=>{this.props.navigation.navigate('Menu')}}>
               <FontAwesome name={"plus"} size={25}></FontAwesome>
             </Button>
         </View>
@@ -102,7 +106,6 @@ export default class ListScreen extends React.Component {
           <Button block success style={{flex:1}} onPress={this.saveOrder}>
             <Text> ยืนยัน </Text>
           </Button>
-          </View>
         </View>
       </View>
     );
@@ -110,13 +113,8 @@ export default class ListScreen extends React.Component {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
   buttonLayout: {
     flexDirection: 'row',
-    textAlignVertical: 'bottom',
-    height:130
+    textAlignVertical: 'bottom'
   }
 });
