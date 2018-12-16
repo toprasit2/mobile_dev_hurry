@@ -58,8 +58,11 @@ export default class HistoryScreen extends React.Component {
   historySelect = (status, menu, restaurant, timeC, _id) => {
     const { navigation } = this.props;
     // console.log(status, menu, restaurant, timeC, _id)
-    if(status == 'finish')
+    if(status == 'finish'){
+      console.log("history navigate QR")
       navigation.navigate('QR', {status, menu, restaurant, timeC, _id});
+    }
+      
   }
 
   render() {

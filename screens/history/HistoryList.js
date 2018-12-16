@@ -8,7 +8,7 @@ import HistoryEntry from './HistoryEntry';
 class HistoryList extends React.Component {
   historySelect = (status, menu, restaurant, timeC, _id) => {
     const { onHistorySelect } = this.props;
-
+    console.log("history List ok")
     if (typeof onHistorySelect === 'function')
         onHistorySelect(status, menu, restaurant, timeC, _id);
   };

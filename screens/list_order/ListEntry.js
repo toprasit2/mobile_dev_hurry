@@ -161,7 +161,7 @@ export default class ListEntry extends React.Component {
                         <AddOption op = { optionEgg } />
                       </View>
                     ):
-                    <View></View>
+                    null
                   }
                   
                   <View style = {styles.speBox}>
