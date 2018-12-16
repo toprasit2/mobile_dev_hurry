@@ -6,7 +6,7 @@ import {
   TouchableHighlight,
   View,
 } from 'react-native';
-import { Button } from 'native-base';
+import { Button, Card } from 'native-base';
 import moment from 'moment';
 class RestText extends React.Component {
   render(){
@@ -27,7 +27,7 @@ class ReserveTime extends React.Component {
     if(status == 'finish') {
       return {fontWeight: 'bold', color: 'red', fontSize: 20}
     }
-    else if(status == 'done'){
+    else if(status == '.done'){
       return {fontWeight: 'bold', color: 'grey', fontSize: 20}
     }
     else {
@@ -62,7 +62,7 @@ class OrderStatus extends React.Component {
     if(status == 'finish') {
       return {fontSize: 20, textAlign: 'left', fontWeight: 'bold', color: 'red'}
     }
-    else if(status == 'done'){
+    else if(status == '.done'){
       return {fontSize: 20, textAlign: 'left', fontWeight: 'bold', color: 'grey'}
     }
     else {
@@ -124,7 +124,7 @@ export default class HistoryEntry extends React.Component {
         height: 160
       }
     }
-    else if(status == 'done'){
+    else if(status == '.done'){
       return {
         backgroundColor: 'lightgrey',
         height: 160
@@ -155,6 +155,7 @@ export default class HistoryEntry extends React.Component {
         onPress={this.handlePressed}
         style={styles.touchable}
       >
+      <Card>
         <View style = {styles.box}>
             <View style = {this.getContainerStyle(status)}>
                   <View style = {styles.resttext}>
@@ -166,10 +167,11 @@ export default class HistoryEntry extends React.Component {
                   </View>
                   <View style = {styles.orderstatus}>
                     <OrderStatus ordersta = {status} />
-                    <CntTime />     
+                    <CntTime />
                   </View>
             </View>
-        </View>  
+        </View>
+      </Card>  
       </TouchableHighlight>
     );
   }
@@ -206,7 +208,6 @@ const styles = StyleSheet.create({
   box: {
     flexDirection: 'column',
     justifyContent: 'space-between',
-    paddingTop: 3
   },
   resttext: {
     flexDirection: 'row',

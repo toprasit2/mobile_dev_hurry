@@ -19,14 +19,10 @@ export default class QRScreen extends React.Component {
     title: 'QR',
   };
 
-  
-  subscribeToFirestore() {
-    
-  }
-
-
   unsubscribeFromFirestore() {
-    this.subscription();
+    if (this.subscription)
+      this.subscription();
+    if(this.subscription2)
     this.subscription2();
   }
 
@@ -47,7 +43,7 @@ export default class QRScreen extends React.Component {
         if(snapshot2._data.restaurant == e.data)
           firestore.collection('user').doc(collection_key).collection('history_order').doc(id).set({
            ...snapshot2._data,
-            status:'done'
+            status:'.done'
           }).then(()=>{
             this.props.navigation.pop()
           })

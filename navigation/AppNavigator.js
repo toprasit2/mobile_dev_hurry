@@ -3,10 +3,18 @@ import { createStackNavigator, createBottomTabNavigator, createAppContainer } fr
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 import HomeScreen from '../screens/HomeScreen';
+
 import OrderScreen from '../screens/OrderScreen';
+import ListScreen from '../screens/list_order/ListScreen';
+import MenuScreen from '../screens/Menu/index';
+import RestaurantScreen from '../screens/restaurant/RestaurantScreen';
+
 import SettingsScreen from '../screens/SettingsScreen';
+
 import HistoryScreen from '../screens/history/HistoryScreen';
+
 import FavouriteScreen from '../screens/FavouriteScreen';
+
 import QRScreen from '../screens/QRScreen';
 
 const HomeStack = createStackNavigator({
@@ -14,6 +22,9 @@ const HomeStack = createStackNavigator({
 });
 
 const OrderStack = createStackNavigator({
+  ListOrder: ListScreen,
+  Menu: MenuScreen,
+  Restaurant: RestaurantScreen,
   Order: OrderScreen,
 });
 
@@ -33,7 +44,7 @@ const FavouriteStack = createStackNavigator({
 
 export default createAppContainer(createBottomTabNavigator(
   {
-    History : HistoryStack,
+    History : HistoryStack, 
     Order : OrderStack,
     Home : HomeStack,
     Favourite : FavouriteStack,

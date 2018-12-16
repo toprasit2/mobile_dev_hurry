@@ -1,33 +1,46 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow
- */
-
 import React, {Component} from 'react';
 import {
-  Platform, 
-  StyleSheet, 
-  Text, 
-  View,
-  TouchableOpacity,
-  Linking,
-  AppRegistry,
+  StyleSheet,
 } from 'react-native';
-
+import firebase from 'react-native-firebase';
 import AppNavigator from './navigation/AppNavigator';
+import Login from './screens/LoginScreen';
 
 export default class App extends Component{
-
-  constructor(props) {
-    super(props)
-    this.state = { data: "hello" };
+  
+  constructor() {
+    super();
+    this.unsubscriber = null;
+    this.state = {
+      user: null,
+    };
   }
+
+  /**
+   * Listen for any auth state changes and update component state
+   */
+  componentDidMount() {
+    this.unsubscriber = firebase.auth().onAuthStateChanged((user) => {
+      this.setState({ user });
+    });
+  }
+
+  componentWillUnmount() {
+    this.unsubscriber();
+    this.unsubscriber2();
+  }
+
+  myLogin = (email, password) => {
+    this.unsubscriber2 = firebase.auth().signInWithEmailAndPassword(email, password)
+  }
+
   render() {
+    if (!this.state.user) {
+      return <Login Login={this.myLogin}/>;
+    }
+    console.log(this.state.user)
     return (
-      <AppNavigator />
+      <AppNavigator user={this.state.user}/>
     );
   }
 }

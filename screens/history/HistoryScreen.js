@@ -17,6 +17,7 @@ export default class HistoryScreen extends React.Component {
   
   state = {
     history_order: [],
+    user: null
   };
 
   subscribeToFirestore() {
@@ -25,7 +26,7 @@ export default class HistoryScreen extends React.Component {
     this.subscription = collection.onSnapshot((snapshot) => {
       collection_key = snapshot.docs[0].id
       console.log(collection_key)
-      const collection2 = firestore.collection('user').doc(collection_key).collection('history_order');
+      const collection2 = firestore.collection('user').doc(collection_key).collection('history_order').orderBy("status", "desc");
       this.subscription2 = collection2.onSnapshot((snapshot2) => {
         console.log("tst")
         console.log(snapshot2.docs)
@@ -45,6 +46,7 @@ export default class HistoryScreen extends React.Component {
   }
 
   componentDidMount() {
+
     this.subscribeToFirestore();
   }
 

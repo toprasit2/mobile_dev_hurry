@@ -10,11 +10,11 @@ export default class HomeScreen extends React.Component {
   static navigationOptions = {
     title: 'Home',
   };
-
+  
   render() {
     return (
       <View style={styles.container}>
-          <Text>หน้าหลัก 555</Text>
+          <Text>Home screen</Text>
       </View>
     );
   }
