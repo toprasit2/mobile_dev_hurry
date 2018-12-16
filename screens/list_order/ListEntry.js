@@ -154,12 +154,19 @@ export default class ListEntry extends React.Component {
                   <OrderList menuname = { menu } />
                 </View>
                 <View style = {styles.optionDetail}>
-                  <View style = {styles.optionBox}>
-                    <AddOption op = { optionEgg } />
-                  </View>
+                  {
+                    optionEgg?
+                    (
+                      <View style = {styles.optionBox}>
+                        <AddOption op = { optionEgg } />
+                      </View>
+                    ):
+                    <View></View>
+                  }
+                  
                   <View style = {styles.speBox}>
                     <PlusSpecial spe = { optionFood } />
-                  </View> 
+                  </View>
                 </View>
               </View>
               <View style = {styles.price}>

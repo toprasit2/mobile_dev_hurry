@@ -15,8 +15,8 @@ export default class Login extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-        email: 'admin@mail.com', 
-        password: 'password'
+        email: '', 
+        password: ''
     };
   }
 

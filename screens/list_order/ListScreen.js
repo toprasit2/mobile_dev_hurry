@@ -35,9 +35,8 @@ export default class ListScreen extends React.Component {
           let sum = 0;
           list_order.map((l) => {
             sum+=l.price
-            // console.log(l.price)
-            this.setState({sum})
           })
+          this.setState({sum})
         }
         else{
           let sum = 0;
@@ -75,9 +74,9 @@ export default class ListScreen extends React.Component {
           status:'cooking'
         })
         firestore.collection('user').doc(collection_key).collection('list_order').doc(l._id).delete()
-        var sum = 0;
-        this.setState({sum})
       })
+      let sum = 0;
+      this.setState({sum})
       const { navigation } = this.props
       navigation.navigate('History')
       

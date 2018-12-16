@@ -25,6 +25,13 @@ class RestaurantScreen extends React.Component {
     });
   }
 
+  textSetState(text){
+    const collection = firestore.collection('restaurant').where('name', '==', text);
+    this.subscription = collection.onSnapshot((snapshot) => {
+        this.updateState(snapshot.docs);
+    });
+}
+
   updateState(docs) {
     const restaurantList = docs.map((doc) => ({
       _id: doc.id,
@@ -75,7 +82,7 @@ class RestaurantScreen extends React.Component {
                 <View style={{paddingLeft: 10, flexDirection:'column'}}>
                   <Text style={{fontSize: 18, flex:1}}>{name}{meat}</Text>
                   <Item rounded style={{flex:1, width:250, padding:10}}>
-                    <Input placeholder= 'ค้นหาร้านอาหาร'/>
+                    <Input placeholder= 'ค้นหาร้านอาหาร' onChangeText={(text) => this.textSetState(text)} />
                     <FontAwesome name={"search"} size={25}></FontAwesome>
                   </Item>
                 </View>

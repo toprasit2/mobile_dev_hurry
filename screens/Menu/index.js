@@ -22,6 +22,13 @@ class Menu extends React.Component{
             this.updateState(snapshot.docs);
         });
     }
+
+    textSetState(text){
+        const collection = firestore.collection('menu').where('name', '==', text);
+        this.subscription = collection.onSnapshot((snapshot) => {
+            this.updateState(snapshot.docs);
+        });
+    }
    
 
     updateState(docs) {
@@ -57,7 +64,7 @@ class Menu extends React.Component{
             <Container>
                 <View style={{padding: 15}}>
                     <Item rounded style={{padding: 10}}>
-                        <Input placeholder='ค้นหาเมนู' />
+                        <Input placeholder='ค้นหาเมนู' onChangeText={(text) => this.textSetState(text)} />
                         <FontAwesome name={"search"} size={25}></FontAwesome>
                     </Item>
                 </View>
