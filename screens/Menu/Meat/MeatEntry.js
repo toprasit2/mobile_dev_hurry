@@ -18,7 +18,7 @@ class MeatEntry extends React.Component {
     } = meat;
 
     return (
-      <View style={{flexDirection: 'row'}}>
+      <View style={{flexDirection: 'row'}} key={meat.id}>
         {each.map(r => 
           <View style={{flexDirection: 'row', padding: 5, paddingTop: 10}}>
             <Button light rounded onPress={()=>this.handlePressed(r)}>

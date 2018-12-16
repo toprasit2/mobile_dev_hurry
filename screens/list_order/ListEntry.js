@@ -72,17 +72,13 @@ class RestText extends React.Component {
 class ReserveTime extends React.Component {
   constructor(props){
     super(props);
-    this.state = {
-      hours: moment().format('h'),
-      minutes: moment().format('mm')
-    }
   }
 
   render(){
     return(
       <View>
         <Text style = {{fontWeight: 'bold', color: 'red', fontSize: 20}}>
-            {this.state.hours} : {this.state.minutes}
+            {this.props.time}
           </Text>
       </View>
     )
@@ -133,7 +129,7 @@ export default class ListEntry extends React.Component {
   render() {
     const { list_order } = this.props;
     const {
-        dateTime, detail, menu, optionEgg, optionFood, price, restaurant, timeC, unit, _id
+        dateTime, detail, menu, optionEgg, optionFood, price, restaurant, timeC, unit, _id, ware
     } = list_order;
     
     if(dateTime != undefined)
@@ -147,7 +143,7 @@ export default class ListEntry extends React.Component {
             <View style = {{flex: 1, backgroundColor: 'lightgrey'}}>
               <View style = {styles.resttext}>
                 <RestText rname = { restaurant } />
-                <ReserveTime />
+                <ReserveTime time={timeC}/>
               </View>
               <View style = {styles.detailZone}>
                 <View style = {styles.orderlist}>
@@ -169,11 +165,14 @@ export default class ListEntry extends React.Component {
                   </View>
                 </View>
               </View>
+            <View style = {styles.detailZone}>
+              <View><Text style = {{fontSize: 20, textAlign: 'left'}}>{unit +""} {ware}</Text></View>
               <View style = {styles.price}>
                 <Text style = {{fontSize: 20}}> ราคา{'\t'} </Text>             
                   <TotalPrice price = { price } />
                 <Text style = {{fontSize: 20}}> {'\t'}บาท </Text>
               </View>
+            </View>
             </View>           
         </View>  
       </TouchableHighlight>

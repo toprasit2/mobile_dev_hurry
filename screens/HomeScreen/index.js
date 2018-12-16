@@ -3,7 +3,9 @@ import {
   StyleSheet,
   View,
   Text,
-  Image
+  Image,
+  Content,
+  Button
 } from 'react-native';
 import {Item, Input, Container, Icon} from 'native-base';
 import firebase from 'react-native-firebase'
@@ -56,9 +58,11 @@ export default class HomeScreen extends React.Component {
         <View >
             <Item >
                 <Image source={{uri: 'https://firebasestorage.googleapis.com/v0/b/mobile-mai-tong-ror.appspot.com/o/dorm-57.jpg?alt=media&token=bebe82e7-4892-4737-83ae-49c55c2c1362'}}
-       style={{width: 355, height: 140}} />
+       style={{width:400 , height: 140}} />
             </Item>
         </View>
+       
+        
         
         <ShopList shopList={ shopList }/>
         

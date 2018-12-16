@@ -2,10 +2,14 @@ import React from 'react';
 import firebase from 'react-native-firebase';
 import {
   View,
-  Text
+  Text,
+  StyleSheet
 } from 'react-native';
-import { Button } from 'native-base';
+import { Button, Container, Card, Content, CardItem } from 'native-base';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+
 const firestore = firebase.firestore();
+
 export default class SettingsScreen extends React.Component {
   static navigationOptions = {
     title: 'Setting',
@@ -52,12 +56,32 @@ export default class SettingsScreen extends React.Component {
     const { name, coin} = this.state;
     console.log(user)
     return (
-      <View >
-          <Text>{user.email}</Text>
-          <Text>{name}</Text>
-          <Text>{coin}</Text>
-          <Button danger onPress={()=>this.singOut()}><Text>LOGOUT</Text></Button>
-      </View>
+      <Container>
+        <Content>
+          <Card>
+            <CardItem header>
+              <View style={{flexDirection: 'row'}}>
+                <FontAwesome name='user' size={50} />
+                <View style={{paddingLeft: 20, flexDirection: 'column'}}>
+                  <Text style={{fontSize: 18}}>Mail: {user.email}</Text>
+                  <Text style={{fontSize: 18}}>Name: {name}</Text>
+                  <Text style={{fontSize: 18}}>Coin: {coin}</Text>
+                </View>
+              </View>
+            </CardItem>
+          </Card>
+            <Button danger  style = {{marginTop : 20,marginHorizontal: 150,borderRadius : 12}} onPress={()=>this.singOut()}>
+              <Text style={{ paddingLeft: 25, width: 100}} >LOGOUT</Text>
+            </Button>
+        </Content>
+      </Container>
     );
   }
 }
+
+const styles = StyleSheet.create({
+  buttonLayout: {
+    flexDirection: 'row',
+    textAlignVertical: 'bottom'
+  }
+});

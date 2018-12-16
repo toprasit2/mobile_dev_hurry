@@ -6,7 +6,7 @@ import {
   TouchableHighlight,
   View,
 } from 'react-native';
-import { Button, Card } from 'native-base';
+import { Button } from 'native-base';
 import moment from 'moment';
 class RestText extends React.Component {
   render(){
@@ -39,8 +39,7 @@ class ReserveTime extends React.Component {
     return(
       <View>
         <Text style = {this.getTextStyle(this.props.status)}>
-          {this.props.time != undefined ? this.props.time.toTimeString().split(" ")[0]: ''}
-          {'\n'}
+          {this.props.time != undefined ? this.props.time: ''}
         </Text>
       </View>
     )
@@ -51,7 +50,7 @@ class OrderList extends React.Component{
   render(){
     return(
       <View>
-        <Text style = {{fontSize: 16, textAlign: 'left', lineHeight: 15}}> {this.props.menuname}{'\n'} </Text>
+        <Text style = {{fontSize: 16, textAlign: 'left'}}> {this.props.menuname}{'\n'} </Text>
       </View>
     );
   }
@@ -88,10 +87,53 @@ class CntTime extends React.Component {
     }
   }
 
+  change(){
+    
+    setInterval(
+      ()=>{
+        var que = this.props.que
+        var timeC = this.props.timeC
+        var timeH = Number(timeC.split('-')[0].split('.')[0])
+        var timeM = Number(timeC.split('-')[0].split('.')[1])
+        
+        var n_hours = moment.utc().hours()
+        var n_minutes = moment.utc().minutes()
+        var n_seconds = moment.utc().seconds()
+        if(n_hours>=17)
+          n_hours-=17;
+        n_hours = timeH-n_hours;
+        if(timeM==0){
+          timeM =timeM+(2*que)+2;
+          n_minutes = timeM-n_minutes+59;
+          n_hours = n_hours-1
+        }
+        else{
+          timeM =timeM+(2*que)+2;
+          if(timeM>n_minutes)
+            n_minutes = timeM-n_minutes;
+          else
+            n_minutes = timeM-n_minutes+30;
+        }
+        n_seconds =60-n_seconds;
+  
+        if(n_hours<=0)
+          n_hours = 0;
+        this.setState({
+          hours:n_hours,
+          minutes:n_minutes,
+          seconds:n_seconds
+        })
+      },1000)
+    
+  }
+
+  componentDidMount(){
+    this.change()
+  }
   render(){
     return(
       <View>
-        <View style = {{height: 24, width: 72, backgroundColor: 'black'}}>
+        <View style = {{height: 24, width: 120, backgroundColor: 'black'}}>
           <Text style = {{fontSize: 16, color: 'white', textAlign: 'center'}}>
             {this.state.hours} : {this.state.minutes} : {this.state.seconds}
           </Text>
@@ -101,6 +143,54 @@ class CntTime extends React.Component {
   }
 }
 
+class AddOption extends React.Component {
+  constructor(props){
+    super(props);
+  }
+  getOption = (op) => {
+    if(op != null)
+      return { fontSize: 16, textAlign: 'center' };
+  }
+
+  render() {
+    return(
+      <View>
+      <Text style = {this.getOption(this.props.op)}>
+        { this.props.op }
+      </Text>
+    </View>
+    );  
+  }
+}
+
+class PlusSpecial extends React.Component {
+  constructor(props){
+    super(props);
+      this.state = {
+        textSpecial: ''
+      }
+  }
+  getOption = (spe) => {
+    if(spe == true){
+      this.state.textSpecial = 'พิเศษ';
+      return { fontSize: 16, textAlign: 'center' };
+    }
+    else {
+      this.state.textSpecial = 'ปกติ';
+      return { fontSize: 16, textAlign: 'center' };
+    }
+  }
+
+  render() {
+    return(
+      <View>
+      <Text style = {this.getOption(this.props.spe)}>
+        { this.state.textSpecial }
+      </Text>
+    </View>
+    );  
+  }
+}
 
 export default class HistoryEntry extends React.Component {
   handlePressed = () => {
@@ -121,19 +211,18 @@ export default class HistoryEntry extends React.Component {
     if(status == 'finish') {
       return {
         backgroundColor: 'lightgreen',
-        height: 160
+        flex: 1
       }
     }
     else if(status == '.done'){
       return {
         backgroundColor: 'lightgrey',
-        height: 160
+        flex: 1
       }
     }
     else {
       return {
-        height: 160,
-        backgroundColor: 'white',
+        flex: 1
       }
     }
   }
@@ -141,35 +230,46 @@ export default class HistoryEntry extends React.Component {
   render() {
     const { history_order } = this.props;
     const {
-      menu,
-      restaurant,
-      timeC,
-      status,
-      dateTime,
-      id
+      dateTime, detail, menu, optionEgg, optionFood, price, status, restaurant, timeC, unit, _id, que
     } = history_order;
+    if(dateTime != undefined)
+      console.log(history_order)
     return (
       <TouchableHighlight
         onPress={this.handlePressed}
         style={styles.touchable}
       >
-      <Card>
         <View style = {styles.box}>
             <View style = {this.getContainerStyle(status)}>
                   <View style = {styles.resttext}>
                     <RestText rname = {restaurant} />
-                    <ReserveTime time={dateTime} status={status}/>
+                    <ReserveTime time={timeC} status={status}/>
                   </View>
-                  <View style = {styles.orderlist}>
-                    <OrderList menuname = {menu} />
+                  <View style = {styles.detailZone}>
+                    <View style = {styles.orderlist}>
+                      <OrderList menuname = { menu } />
+                    </View>
+                  <View style = {styles.optionDetail}>
+                    {
+                      optionEgg?
+                    (
+                      <View style = {styles.optionBox}>
+                        <AddOption op = { optionEgg } />
+                      </View>
+                    ):
+                    <View></View>
+                  }                  
+                  <View style = {styles.speBox}>
+                    <PlusSpecial spe = { optionFood } />
                   </View>
+                </View>
+              </View>
                   <View style = {styles.orderstatus}>
                     <OrderStatus ordersta = {status} />
-                    <CntTime />
+                    <CntTime que={que} timeC={timeC}/>     
                   </View>
             </View>
-        </View>
-      </Card>  
+        </View>  
       </TouchableHighlight>
     );
   }
@@ -199,30 +299,70 @@ const styles = StyleSheet.create({
   },
   menu: {
     fontWeight: 'bold',
+    fontSize: 16
   },
   restaurant: {
-    fontWeight: 'normal',
+    fontSize: 20,
+    fontWeight: 'normal'
   },
   box: {
     flexDirection: 'column',
     justifyContent: 'space-between',
+    paddingHorizontal: 5,
+    paddingTop: 5,
+    paddingBottom: 5
   },
   resttext: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingHorizontal: 10,
-    paddingTop: 10
+    paddingHorizontal: 4,
+    paddingTop: 4
   },
   orderlist: {
     flexDirection: 'column',
-    paddingHorizontal: 10,
+    paddingHorizontal: 25,
+    justifyContent: 'space-evenly'
+  },
+  price: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    textAlignVertical: 'bottom',
+    paddingBottom: 4,
+    paddingHorizontal: 4
+  },
+  optionDetail: {
+    flexDirection: 'column',
+    justifyContent: 'space-evenly',
+    alignItems: 'flex-end',
+    paddingHorizontal: 25
+  },
+  detailZone: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  optionBox: {
+    height: 32,
+    width: 64,
+    backgroundColor: 'white',
+    borderColor: 'black',
+    borderWidth: 1,
+    paddingVertical: 3
+  },
+  speBox: {
+    height: 32,
+    width: 64,
+    backgroundColor: 'white',
+    borderColor: 'black',
+    borderWidth: 1,
+    paddingVertical: 3
   },
   orderstatus: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     textAlignVertical: 'bottom',
-    paddingBottom: 10,
-    paddingHorizontal: 10
+    paddingBottom: 4,
+    paddingHorizontal: 4,
+    paddingTop: 4
   }
 });
 

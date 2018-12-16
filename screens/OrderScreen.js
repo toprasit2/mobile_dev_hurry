@@ -38,6 +38,7 @@ export default class OrderScreen extends React.Component {
     timeC: '',
     ware: '',
     time: {},
+    timeSelected: {}
 
 };
 do = () => {
@@ -71,10 +72,10 @@ moreEggStar = () => {
                 Omlet: 'white',
                 Segg: '#e8a806'
             },
-            optionEgg: 'star egg'
+            optionEgg: 'ไข่ดาว'
         })
         this.addPrice('moreEggStarNewPress');
-    } else if (this.state.optionEgg == 'star egg') {
+    } else if (this.state.optionEgg == 'ไข่ดาว') {
         this.setState({
             chkEgg: {
                 Omlet: 'white',
@@ -83,13 +84,13 @@ moreEggStar = () => {
             optionEgg: ''
         })
         this.addPrice('moreEggStarFromStar');
-    } else if (this.state.optionEgg == 'Omlet') {
+    } else if (this.state.optionEgg == 'ไข่เจียว') {
         this.setState({
             chkEgg: {
                 Omlet: 'white',
                 Segg: '#e8a806'
             },
-            optionEgg: 'star egg'
+            optionEgg: 'ไข่ดาว'
         })
         this.addPrice('moreEggStarFromOmlet');
     }
@@ -103,10 +104,10 @@ moreEggOmlet = () => {
             chkEgg: {
                 Omlet: '#e8a806',
                 Segg: 'white'
-            }, optionEgg: 'Omlet'
+            }, optionEgg: 'ไข่เจียว'
         })
         this.addPrice('moreEggOmletNew');
-    } else if (this.state.optionEgg == 'Omlet') {
+    } else if (this.state.optionEgg == 'ไข่เจียว') {
         this.setState({
             chkEgg: {
                 Omlet: 'white',
@@ -115,12 +116,12 @@ moreEggOmlet = () => {
             optionEgg: ''
         })
         this.addPrice('moreEggOmletFromOmlet');
-    } else if (this.state.optionEgg == 'star egg') {
+    } else if (this.state.optionEgg == 'ไข่ดาว') {
         this.setState({
             chkEgg: {
                 Omlet: '#e8a806',
                 Segg: 'white'
-            }, optionEgg: 'Omlet'
+            }, optionEgg: 'ไข่เจียว'
         })
         this.addPrice('moreEggOmletFromStar');
     }
@@ -131,7 +132,7 @@ chkPack = () => {
         chkPD: {
             chkdisk: 'white',
             chkpack: '#e8a806'
-        }, ware: 'pack'
+        }, ware: 'ห่อ'
     })
 }
 chkDisk = () => {
@@ -139,14 +140,16 @@ chkDisk = () => {
         chkPD: {
             chkdisk: '#e8a806',
             chkpack: 'white'
-        }, ware: 'disk'
+        }, ware: 'จาน'
     })
 }
 addUnit = () => {
-    this.setState({
-        unit: this.state.unit + 1
-    })
-    this.addPrice('addUnit');
+    if (this.state.unit != this.state.timeSelected.max_que - this.state.timeSelected.wait_que) {
+        this.setState({
+            unit: this.state.unit + 1
+        })
+        this.addPrice('addUnit');
+    } 
 };
 addPrice = (from) => {
     if (from == 'addUnit') {
@@ -208,9 +211,10 @@ createCollectionListOrder = () => {
         optionFood: this.state.optionFood,
         price: Number(this.state.price),
         restaurant: restaurant,
-        timeC: this.state.timeC,
+        timeC: this.state.selected,
         unit: this.state.unit,
-        ware: this.state.ware
+        ware: this.state.ware,
+        que:this.state.timeSelected.wait_que//----------
     }
     //************************** �� id user ***********************
     const collection = firestore.collection('user').where("email", "==", "admin@mail.com");
@@ -224,33 +228,24 @@ createCollectionListOrder = () => {
         userC.collection('list_order').add({ ...myListOrder });
         navigation.navigate('ListOrder')
     });
+    this.updateDatabase();
     //this.unsubscribeFromFirestoreUser();
     //****************************************************************
     
 }
 
 updateDatabase=()=>{
-    firestore.runTransaction((t) => { /*t ��Ҩ��繵��᷹��÷���¡���տѧ����������͡������ */
-        /* ��� t ������ set update delete get ��觨�价ӡѺ database ��ǹ�����ҵ�ͧ���*/
-        const listOrder = firestore.collection('user').doc('nOLZVHDgnhyTXsrGjfHj').collection('list_order').doc(this.state.userListOrder.id);
-        const ques = firestore.collection('restaurant').doc(this.state.resDetail.id).collection('ques');
+    firestore.runTransaction((t) => { /*t น่าจะเป็นตัวแทนการทำรายการมีฟังก์ชั่นให้เลือกทำเยอะ */
+        /* ที่ t ทำได้คือ set update delete get ซึ่งจะไปทำกับ database ส่วนที่เราต้องการ*/
+        const ques = firestore.collection('restaurant').doc(this.state.resDetail.id).collection('ques').doc(this.state.timeSelected.id);
 
-                /*����觹��������������㹹�鹷ӧҹ���稡�͹ ����仵�� */
+                /*คำสั่งนี้คือรอให้ทั้งหมดในนั้นทำงานเสร็จก่อน ค่อยไปต่อ */
         return Promise.all([
-            t.update(listOrder, {
-                dateTime: firebase.firestore.FieldValue.serverTimestamp(),
-                detail: this.state.detail,
-                menu: this.state.userListOrder.menu,
-                optionEgg: this.state.optionEgg,
-                optionFood: this.state.optionFood,
-                price: this.state.price,
-                restaurant: this.state.userListOrder.restaurant,
-                timeC: this.state.timeC,
-                unit: this.state.unit,
-                ware:this.state.ware
+            t.update(ques, {
+                wait_que: this.state.timeSelected.wait_que + this.state.unit
                     }),
                 ]);
-            });
+    });
     }
 
 //************************** restaurant firestore ************************************************
@@ -344,7 +339,7 @@ unSubscribeToFirestoreOption = () => {
 
 //********************************** ques firestore ***********************************
 subscribeToFirestoreQues = () => {
-    const ques = firestore.collection('restaurant').doc(this.state.resDetail.id).collection('ques');
+    const ques = firestore.collection('restaurant').doc(this.state.resDetail.id).collection("ques").orderBy("time", "asc");
     this.subscriptionQues = ques.onSnapshot((snapshot) => {
         this.updateStateQues(snapshot.docs);
     })
@@ -384,29 +379,31 @@ onValueChange = (value: String) => {
     this.setState({
         selected: value
     });
+    this.state.AllTime.map((t) => {
+        if(t.time == value){
+            this.setState({
+                timeSelected:t
+            })
+        }
+    })
     
 }
 findTime = () => {
     let hour = new Date().getHours();
     let minutes = new Date().getMinutes();
-    console.log("now Time", hour, minutes);
     var timeCan = [];
     this.state.AllTime.map((t) => {
-        hr1 = parseInt(t.time.substring(0, 2))
-        hr2 = parseInt(t.time.substring(6, 8))
-        mm1 = parseInt(t.time.substring(3, 5))
-        mm2 = parseInt(t.time.substring(9, 11))
-        if (hr1 > hour || hr2 > hour) {
+        tt = parseFloat(t.time.substring(0, 5))
+        console.log("float t", tt);
+        if (tt > hour) {
             timeCan.push(t);
+        } else if (tt == hour) {
+            if (minutes <= 30)
+                timeCan.push(t)
         }
-        if (hr1 == hour) {
-            if (0 <= minutes && minutes <= 30)
-                timeCan.push(t);
-        }
+        
     })
-
-    this.setState({ AllTime: timeCan});
-    
+    this.setState({ AllTime: timeCan, selected: timeCan[0].time, timeSelected: timeCan[0] })
 }
 
 
@@ -424,7 +421,7 @@ render() {
                         </Col>
                         <Col style={{ height: 80 }}>
                             <Text style={styles.textFont}> {this.state.resDetail.name}{"\n"}</Text>
-                            <Text style={styles.textFont}> Current que    minute </Text>
+                            
                         </Col>
                     </Row>
                     <Row style={{ height: 80, marginBottom: 2 }}>
@@ -440,20 +437,20 @@ render() {
                     <Row style={{ height: 100, marginBottom: 2 }}>
                         <Col onPress={this.extra} style={{ backgroundColor: this.state.chkExtra, height: 100, marginRight: 2, marginLeft: 2 }}>
                             <View style={styles.bottomButton}>
-                                <Text> Extra</Text>
+                                <Text> พิเศษ </Text>
                                 <Text> +{this.state.option.extra} </Text>
                             </View>
                         </Col>
 
                         <Col onPress={this.moreEggStar} style={{ backgroundColor: this.state.chkEgg.Segg, height: 100, marginRight: 2 }}>
                             <View style={styles.bottomButton}>
-                                <Text> star egg </Text>
+                                <Text> ไข่ดาว </Text>
                                 <Text> +{this.state.option.star_egg} </Text>
                             </View>
                         </Col>
                         <Col onPress={this.moreEggOmlet} style={{ backgroundColor: this.state.chkEgg.Omlet, height: 100, marginRight: 2 }}>
                             <View style={styles.bottomButton}>
-                                <Text> Omlet </Text>
+                                <Text> ไข่เจียว </Text>
                                 <Text> +{this.state.option.omlet} </Text>
                             </View>
                         </Col>
@@ -474,12 +471,12 @@ render() {
                         </Col>
                         <Col style={{ backgroundColor: this.state.chkPD.chkdisk, height: 50, marginRight: 2 }} onPress={this.chkDisk}>
                             <View style={styles.bottomButton} >
-                                <Text> disk </Text>
+                                <Text> จาน </Text>
                             </View>
                         </Col>
                         <Col style={{ backgroundColor: this.state.chkPD.chkpack, height: 50, marginRight: 4 }} onPress={this.chkPack}>
                             <View style={styles.bottomButton} >
-                                <Text> pack </Text>
+                                <Text> ห่อ </Text>
                             </View>
                         </Col>
                     </Row>
@@ -595,7 +592,7 @@ boxLarge: {
     alignItems: 'center',
     backgroundColor: 'skyblue',
 }, textFont: {
-    fontSize: 20,
+    fontSize: 30,
 }, bottomButton: {
     flex: 1,
     flexDirection: 'row',

@@ -26,7 +26,7 @@ class MenuEntry extends React.Component {
     } = menu;
 
     return (
-        <Card>
+        <Card key={menu.id}>
           <CardItem>
             <Body>
               <View style={{flexDirection: 'row'}}>
