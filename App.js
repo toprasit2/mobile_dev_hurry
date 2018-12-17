@@ -26,8 +26,10 @@ export default class App extends Component{
   }
 
   componentWillUnmount() {
-    this.unsubscriber();
-    this.unsubscriber2();
+    if(this.unsubscriber)
+      this.unsubscriber();
+    if(this.unsubscriber2)
+      this.unsubscriber2();
   }
 
   myLogin = (email, password) => {
@@ -38,7 +40,7 @@ export default class App extends Component{
     if (!this.state.user) {
       return <Login Login={this.myLogin}/>;
     }
-    console.log(this.state.user)
+    // console.log(this.state.user)
     return (
       <AppNavigator user={this.state.user}/>
     );
@@ -46,32 +48,5 @@ export default class App extends Component{
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  centerText: {
-    flex: 1,
-    fontSize: 18,
-    padding: 32,
-    color: '#777',
-  },
-  textBold: {
-    fontWeight: '500',
-    color: '#000',
-  },
-  buttonText: {
-    fontSize: 21,
-    color: 'rgb(0,122,255)',
-  },
-  buttonTouchable: {
-    padding: 16,
-  },
+  
 });

@@ -118,7 +118,7 @@ class CntTime extends React.Component {
         }
         n_seconds =60-n_seconds;
   
-        if(n_hours<=0){
+        if(n_hours<0){
           n_hours = 0;
           n_minutes = 0;
           n_seconds = 0;

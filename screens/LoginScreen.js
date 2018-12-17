@@ -60,7 +60,7 @@ export default class Login extends React.Component {
       </CardItem>
       
 
-      <Button   style = {{marginTop :20,borderRadius: 12}} onPress={()=>this.props.Login(this.state.email, this.state.password)}>
+      <Button   style = {{marginTop :20,borderRadius: 12, marginBottom:20, marginHorizontal:150}} onPress={()=>this.props.Login(this.state.email, this.state.password)}>
             <Text >Log in </Text>
         </Button>
       </Card>
