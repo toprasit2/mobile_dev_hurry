@@ -6,7 +6,7 @@ import {
   TouchableHighlight,
   View,
 } from 'react-native';
-import { Button } from 'native-base';
+import { Button, Card } from 'native-base';
 import moment from 'moment';
 class RestText extends React.Component {
   render(){
@@ -81,9 +81,9 @@ class CntTime extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      hours: 0,
-      minutes: 0,
-      seconds: 0
+      hours: "00",
+      minutes: "00",
+      seconds: "00"
     }
   }
 
@@ -101,6 +101,8 @@ class CntTime extends React.Component {
         var n_seconds = moment.utc().seconds()
         if(n_hours>=17)
           n_hours-=17;
+        else
+          n_hours+=7;
         n_hours = timeH-n_hours;
         if(timeM==0){
           timeM =timeM+(2*que)+2;
@@ -116,12 +118,31 @@ class CntTime extends React.Component {
         }
         n_seconds =60-n_seconds;
   
-        if(n_hours<=0)
+        if(n_hours<=0){
           n_hours = 0;
+          n_minutes = 0;
+          n_seconds = 0;
+        }
+        var s_hours = ""
+        var s_minutes = ""
+        var s_seconds = ""
+        if (n_hours<10)
+          s_hours = "0" + n_hours
+        else
+          s_hours = "" + n_hours
+        if (n_minutes<10)
+          s_minutes = "0" + n_minutes
+        else
+          s_minutes = ""+n_minutes
+        if (n_seconds<10)
+          s_seconds = "0" + n_seconds
+        else
+          s_seconds = ""+n_seconds
+        
         this.setState({
-          hours:n_hours,
-          minutes:n_minutes,
-          seconds:n_seconds
+          hours:s_hours,
+          minutes:s_minutes,
+          seconds:s_seconds
         })
       },1000)
     
@@ -239,7 +260,7 @@ export default class HistoryEntry extends React.Component {
         onPress={this.handlePressed}
         style={styles.touchable}
       >
-        <View style = {styles.box}>
+        <Card>
             <View style = {this.getContainerStyle(status)}>
                   <View style = {styles.resttext}>
                     <RestText rname = {restaurant} />
@@ -269,7 +290,7 @@ export default class HistoryEntry extends React.Component {
                     <CntTime que={que} timeC={timeC}/>     
                   </View>
             </View>
-        </View>  
+          </Card>  
       </TouchableHighlight>
     );
   }
